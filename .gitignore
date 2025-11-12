@@ -72,3 +72,8 @@ Plugins/**/Intermediate/*
 
 # Cache files for the editor to use
 DerivedDataCache/*
+
+# ArcGIS Maps SDK specific exclusions (add to standard Unreal .gitignore)
+Plugins/ArcGISMapsSDK/*
+# If the SDK creates caches or temporary files in the project's Saved dir, ensure it's covered by the general Saved/ rule
+
