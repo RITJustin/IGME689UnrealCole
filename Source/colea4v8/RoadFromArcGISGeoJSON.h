@@ -4,35 +4,44 @@
 #include "GameFramework/Actor.h"
 #include "Components/SplineComponent.h"
 #include "Components/SplineMeshComponent.h"
+#include "Materials/MaterialInterface.h"
+#include "Engine/StaticMesh.h"
 #include "RoadFromArcGISGeoJSON.generated.h"
 
 UCLASS()
 class COLEA4V8_API ARoadFromArcGISGeoJSON : public AActor
 {
     GENERATED_BODY()
-
-public:
+    
+public:    
     ARoadFromArcGISGeoJSON();
 
 protected:
     virtual void BeginPlay() override;
 
-public:
+public:    
     virtual void Tick(float DeltaTime) override;
 
-    // --- Spline to hold road points ---
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Road")
+    /** The spline component that defines the road path */
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Road")
     USplineComponent* RoadSpline;
 
-    // --- Material property exposed to the Editor ---
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Road")
+    /** The material to apply to the spline mesh */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Road Settings")
     UMaterialInterface* RoadMaterial;
 
-    // --- Function to add points to the spline ---
-    void AddRoadPoint(const FVector& Point);
+    /** The mesh to use for the spline segments */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Road Settings")
+    UStaticMesh* RoadMesh;
+
+    /** Load GeoJSON file path (relative to Content folder) */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Road Settings")
+    FString GeoJSONFile;
+
+    /** Function to load the GeoJSON and create the spline */
+    UFUNCTION(CallInEditor, Category="Road")
+    void LoadGeoJSON();
 
 private:
-    // Keep track of created spline mesh components
-    UPROPERTY()
-    TArray<USplineMeshComponent*> SplineMeshes;
+    void CreateSplineMeshSegment(const FVector& Start, const FVector& End);
 };
